@@ -4,7 +4,10 @@
     "composite": true,
     "rootDir": "..",
     "outDir": "../.tsbuild",
-    "types": ["vitest/globals"]
+    "types": ["vitest/globals"],
+    "paths": {
+      "~/*": ["../src/*"]
+    }
   },
   "include": ["../tests/**/*", "../src/**/*.spec.ts"],
   "exclude": ["node_modules", "dist"],

@@ -1,4 +1,4 @@
-# Contributing to @moontai0724/npm-kickstart
+# Contributing to flickr-sdk
 
 Thank you for your interest in contributing! This document provides guidelines for contributing to the project.
 
@@ -14,8 +14,8 @@ Thank you for your interest in contributing! This document provides guidelines f
 1. Fork and clone the repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/npm-kickstart.git
-cd npm-kickstart
+git clone https://github.com/YOUR_USERNAME/flickr-sdk.git
+cd flickr-sdk
 ```
 
 2. Install dependencies:
@@ -35,7 +35,7 @@ git checkout -b fix/your-bugfix-name
 ## Project Structure
 
 ```
-npm-kickstart/
+flickr-sdk/
 ├── .github/
 │   └── workflows/
 │       ├── ci.yml          # CI workflow with tests
@@ -239,7 +239,7 @@ When adding new features or fixing bugs:
 
 ### Coverage Reports
 
-Coverage reports are automatically generated and uploaded to [Codecov](https://codecov.io/gh/moontai0724/npm-kickstart) on every CI run. You can view:
+Coverage reports are automatically generated and uploaded to [Codecov](https://codecov.io/gh/moontaiworks/flickr-sdk) on every CI run. You can view:
 
 - Line coverage
 - Branch coverage
@@ -289,7 +289,7 @@ The Release workflow runs on pushes to the `main` branch:
 
 API documentation is automatically generated using [TypeDoc](https://typedoc.org/) and published to GitHub Pages.
 
-- **View the latest documentation**: [GitHub Pages](https://moontai0724.github.io/npm-kickstart/)
+- **View the latest documentation**: [GitHub Pages](https://moontaiworks.github.io/flickr-sdk/)
 
 ### Generating Documentation Locally
 
