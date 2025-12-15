@@ -1,0 +1,12 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": "..",
+    "outDir": "../.tsbuild",
+    "types": ["vitest/globals"]
+  },
+  "include": ["../tests/**/*", "../src/**/*.spec.ts"],
+  "exclude": ["node_modules", "dist"],
+  "references": [{ "path": "../src/tsconfig.json" }]
+}

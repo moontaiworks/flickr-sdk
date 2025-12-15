@@ -1,0 +1,94 @@
+{
+  "name": "@moontai0724/npm-kickstart",
+  "version": "1.0.1",
+  "description": "A TypeScript NPM package kickstart template with ESLint, Prettier, and automated releases",
+  "author": "moontai0724",
+  "license": "MIT",
+  "type": "module",
+  "main": "./dist/bundle/index.cjs",
+  "module": "./dist/bundle/index.js",
+  "types": "./dist/bundle/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "tag": "latest",
+    "provenance": true
+  },
+  "homepage": "https://moontai0724.github.io/npm-kickstart/",
+  "bugs": {
+    "url": "https://github.com/moontai0724/npm-kickstart/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moontai0724/npm-kickstart.git"
+  },
+  "scripts": {
+    "build": "pnpm run build:bundle && pnpm run build:native",
+    "build:bundle": "tsup",
+    "build:native": "pnpm run build:native:esm && pnpm run build:native:cjs",
+    "build:native:esm": "tsc -p tsconfig.esm.json",
+    "build:native:cjs": "tsc -p tsconfig.cjs.json",
+    "clean": "rm -rf dist",
+    "docs": "typedoc",
+    "docs:clean": "rm -rf docs",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "typecheck": "tsc -p src/tsconfig.json --noEmit",
+    "prepublishOnly": "pnpm run clean && pnpm run build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "prepare": "husky install"
+  },
+  "keywords": [
+    "typescript",
+    "eslint",
+    "prettier",
+    "template",
+    "kickstart",
+    "npm-package"
+  ],
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@types/node": "^24.10.0",
+    "@typescript-eslint/parser": "^8.46.4",
+    "@vitest/coverage-v8": "^4.0.8",
+    "@vitest/ui": "^4.0.8",
+    "eslint": "^9.39.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import-x": "^4.16.1",
+    "eslint-plugin-perfectionist": "^4.15.1",
+    "eslint-plugin-prettier": "^5.5.4",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
+    "prettier": "^3.6.2",
+    "semantic-release": "^25.0.2",
+    "tsup": "^8.5.0",
+    "typedoc": "^0.28.14",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.4",
+    "vitest": "^4.0.8"
+  }
+}
