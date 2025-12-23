@@ -1,7 +1,7 @@
 {
-  "name": "@moontai0724/npm-kickstart",
-  "version": "1.0.1",
-  "description": "A TypeScript NPM package kickstart template with ESLint, Prettier, and automated releases",
+  "name": "@moontaiworks/flickr-sdk",
+  "version": "0.0.0-development",
+  "description": "A TypeScript Flickr SDK for Node.js and Browser",
   "author": "moontai0724",
   "license": "MIT",
   "type": "module",
@@ -28,13 +28,13 @@
     "tag": "latest",
     "provenance": true
   },
-  "homepage": "https://moontai0724.github.io/npm-kickstart/",
+  "homepage": "https://moontaiworks.github.io/flickr-sdk/",
   "bugs": {
-    "url": "https://github.com/moontai0724/npm-kickstart/issues"
+    "url": "https://github.com/moontaiworks/flickr-sdk/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/moontai0724/npm-kickstart.git"
+    "url": "git+https://github.com/moontaiworks/flickr-sdk.git"
   },
   "scripts": {
     "build": "pnpm run build:bundle && pnpm run build:native",
@@ -59,16 +59,14 @@
   },
   "keywords": [
     "typescript",
-    "eslint",
-    "prettier",
-    "template",
-    "kickstart",
-    "npm-package"
+    "typestrong",
+    "flickr",
+    "sdk"
   ],
   "devDependencies": {
-    "@eslint/js": "^9.39.1",
     "@commitlint/cli": "^20.1.0",
     "@commitlint/config-conventional": "^20.0.0",
+    "@eslint/js": "^9.39.1",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@types/node": "^24.10.0",
