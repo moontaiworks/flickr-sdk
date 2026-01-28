@@ -7,6 +7,15 @@ export interface RequestRestOptions {
   params: SearchParamsOption;
 }
 
+const xmlParser = new XMLParser({
+  allowBooleanAttributes: true,
+  alwaysCreateTextNode: true,
+  attributeNamePrefix: "",
+  attributesGroupName: false,
+  ignoreAttributes: false,
+  ignoreDeclaration: true,
+});
+
 export async function requestRestXML<T>(options: RequestRestOptions) {
   const endpoint = "https://api.flickr.com/services/rest";
   const { method = "GET", params: searchParams } = options;
@@ -17,16 +26,7 @@ export async function requestRestXML<T>(options: RequestRestOptions) {
   });
 
   const text = await response.text();
-  const parser = new XMLParser({
-    allowBooleanAttributes: true,
-    alwaysCreateTextNode: true,
-    attributeNamePrefix: "",
-    attributesGroupName: false,
-    ignoreAttributes: false,
-    ignoreDeclaration: true,
-  });
-
-  const xmlDoc = parser.parse(text) as { rsp: T };
+  const xmlDoc = xmlParser.parse(text) as { rsp: T };
   if (!("rsp" in xmlDoc)) throw new Error("Invalid XML response!");
 
   return xmlDoc.rsp;
