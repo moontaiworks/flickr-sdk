@@ -16,6 +16,18 @@ const xmlParser = new XMLParser({
   ignoreDeclaration: true,
 });
 
+interface ErrorResponse {
+  err: {
+    code: string;
+    msg: string;
+  };
+  stat: "fail";
+}
+
+interface SuccessResponse {
+  stat: "ok";
+}
+
 export async function requestRestXML<T>(options: RequestRestOptions) {
   const endpoint = "https://api.flickr.com/services/rest";
   const { method = "GET", params: searchParams } = options;
@@ -26,8 +38,15 @@ export async function requestRestXML<T>(options: RequestRestOptions) {
   });
 
   const text = await response.text();
-  const xmlDoc = xmlParser.parse(text) as { rsp: T };
+  const xmlDoc = xmlParser.parse(text) as {
+    rsp: ErrorResponse | (SuccessResponse & T);
+  };
   if (!("rsp" in xmlDoc)) throw new Error("Invalid XML response!");
+
+  if ("stat" in xmlDoc.rsp && xmlDoc.rsp.stat === "fail") {
+    console.error("Got error response", xmlDoc.rsp);
+    throw new Error(`${xmlDoc.rsp.err.code}: ${xmlDoc.rsp.err.msg}`);
+  }
 
   return xmlDoc.rsp;
 }
