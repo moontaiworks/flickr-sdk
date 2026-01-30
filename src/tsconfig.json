@@ -1,10 +1,16 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "composite": true,
-    "rootDir": "..",
-    "outDir": "../.tsbuild"
+    // File Layout
+    // Specify the root folder contains all ts files
+    "rootDir": ".",
+    "outDir": "../.tsbuild/src",
+
+    "noEmit": false,
+    "noEmitOnError": true,
+    "sourceMap": true,
+    "tsBuildInfoFile": "../.tsbuild/src.tsbuildinfo"
   },
-  "include": ["../src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts", "tests"]
+  "include": ["./**/*.ts"],
+  "exclude": ["./**/*.spec.ts", "./**/*.test-d.ts"]
 }
