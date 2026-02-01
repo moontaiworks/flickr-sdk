@@ -24,10 +24,6 @@ interface ErrorResponse {
   stat: "fail";
 }
 
-interface SuccessResponse {
-  stat: "ok";
-}
-
 export async function requestRestXML<T>(options: RequestRestOptions) {
   const endpoint = "https://api.flickr.com/services/rest";
   const { method = "GET", params: searchParams } = options;
@@ -39,7 +35,7 @@ export async function requestRestXML<T>(options: RequestRestOptions) {
 
   const text = await response.text();
   const xmlDoc = xmlParser.parse(text) as {
-    rsp: ErrorResponse | (SuccessResponse & T);
+    rsp: ErrorResponse | (T & { stat: "ok" });
   };
   if (!("rsp" in xmlDoc)) throw new Error("Invalid XML response!");
 
