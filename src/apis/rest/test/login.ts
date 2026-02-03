@@ -19,7 +19,7 @@ interface LoginResponseRaw {
   stat: "ok";
   user: {
     id: string;
-    username: { "#text": string };
+    username: string;
   };
 }
 
@@ -40,15 +40,5 @@ export async function login(
     params: requestParams,
   });
 
-  return normalizeLoginResponse(response);
-}
-
-function normalizeLoginResponse(response: LoginResponseRaw): LoginResponse {
-  return {
-    stat: response.stat,
-    user: {
-      id: response.user.id,
-      username: response.user.username["#text"],
-    },
-  };
+  return response;
 }
