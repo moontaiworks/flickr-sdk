@@ -1,3 +1,5 @@
+import { createHMAC, createSHA1 } from "hash-wasm";
+
 /**
  * Input required to build an OAuth 1.0a Authorization header.
  */
@@ -17,7 +19,14 @@ export interface OAuthInput {
   url: string;
 }
 
+/**
+ * The signature method is always HMAC-SHA1.
+ * @see https://oauth.net/core/1.0a/#rfc.section.9.2
+ */
 const signatureMethod = "HMAC-SHA1";
+/**
+ * The version is always 1.0.
+ */
 const oauthVersion = "1.0";
 
 /**
@@ -44,11 +53,40 @@ const oauthVersion = "1.0";
 export async function createOAuthAuthorizationHeader(
   input: OAuthInput,
 ): Promise<string> {
+  const headerParams = await createOAuthParams(input);
+  const headerValue = headerParams
+    .map(([key, value]) => `${rfc3986Encode(key)}="${rfc3986Encode(value)}"`)
+    .join(", ");
+
+  return `OAuth ${headerValue}`;
+}
+
+/**
+ * Create OAuth params suitable for query strings.
+ *
+ * @example
+ * ```ts
+ * const params = await createOAuthParams({
+ *   method: "GET",
+ *   url: "https://api.flickr.com/services/rest",
+ *   params: new URLSearchParams({ method: "flickr.test.echo" }),
+ *   oauth: {
+ *     consumerKey: "your-consumer-key",
+ *     consumerSecret: "your-consumer-secret",
+ *     token: "user-token",
+ *     tokenSecret: "user-token-secret",
+ *   },
+ * });
+ * ```
+ */
+export async function createOAuthParams(
+  input: OAuthInput,
+): Promise<[string, string][]> {
   const nonce = input.oauth.nonce ?? Date.now().toString();
   const timestamp =
     input.oauth.timestamp ?? Math.floor(Date.now() / 1000).toString();
 
-  // Base OAuth params used for signature and header.
+  // Base OAuth params used for signature and requests.
   const oauthParams: [string, string][] = [
     ["oauth_consumer_key", input.oauth.consumerKey],
     ["oauth_nonce", nonce],
@@ -82,16 +120,7 @@ export async function createOAuthAuthorizationHeader(
     signingKey(input.oauth.consumerSecret, input.oauth.tokenSecret),
   );
 
-  const headerParams: [string, string][] = [
-    ...oauthParams,
-    ["oauth_signature", signature],
-  ];
-
-  const headerValue = headerParams
-    .map(([key, value]) => `${rfc3986Encode(key)}="${rfc3986Encode(value)}"`)
-    .join(", ");
-
-  return `OAuth ${headerValue}`;
+  return [...oauthParams, ["oauth_signature", signature]];
 }
 
 /**
@@ -134,7 +163,6 @@ function buildBaseString(
  * Compute HMAC-SHA1 digest and return a base64 string.
  */
 async function hmacSha1Base64(message: string, key: string): Promise<string> {
-  const { createHMAC, createSHA1 } = await import("hash-wasm");
   const hmac = await createHMAC(createSHA1(), key);
   const digest = hmac.init().update(message).digest("binary");
   return base64Encode(digest);

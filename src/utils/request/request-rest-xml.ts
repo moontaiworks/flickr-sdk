@@ -2,7 +2,7 @@ import { XMLParser } from "fast-xml-parser";
 import type { SearchParamsOption } from "ky";
 import { default as ky } from "ky";
 
-import { createOAuthAuthorizationHeader } from "./oauth";
+import { createOAuthParams } from "./oauth";
 
 const endpoint = "https://api.flickr.com/services/rest";
 
@@ -44,7 +44,7 @@ interface RequestConfig {
  *   params: { method: "flickr.test.echo" },
  *   oauth: { consumerKey: "your-consumer-key" },
  * });
- * // If consumerSecret is missing, api_key is injected and no OAuth header is set.
+ * // If consumerSecret is missing, api_key is injected and no OAuth params are added.
  * ```
  */
 export async function buildRestRequestConfig(
@@ -60,8 +60,8 @@ export async function buildRestRequestConfig(
     }
 
     if (oauth.consumerSecret) {
-      // Sign request and attach OAuth Authorization header.
-      const authorization = await createOAuthAuthorizationHeader({
+      // Sign request and append OAuth params to the query string.
+      const oauthParams = await createOAuthParams({
         method,
         oauth: {
           callback: oauth.callback,
@@ -76,10 +76,9 @@ export async function buildRestRequestConfig(
         params: searchParams,
         url: endpoint,
       });
-
-      headers = {
-        Authorization: authorization,
-      };
+      for (const [key, value] of oauthParams) {
+        searchParams.set(key, value);
+      }
     } else if (!searchParams.has("api_key")) {
       // Public request fallback for endpoints that allow api_key.
       searchParams.set("api_key", oauth.consumerKey);

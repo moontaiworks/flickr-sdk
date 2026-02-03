@@ -13,11 +13,12 @@ describe("buildRestRequestConfig", () => {
 
     const params = new URLSearchParams(config.searchParams);
     expect(params.get("api_key")).toBe("key");
+    expect(params.get("oauth_signature")).toBeNull();
     const headers = config.headers as undefined | { Authorization?: string };
     expect(headers?.Authorization).toBeUndefined();
   });
 
-  it("adds OAuth Authorization header when consumerSecret is present", async () => {
+  it("adds OAuth params when consumerSecret is present", async () => {
     const config = await buildRestRequestConfig({
       oauth: {
         consumerKey: "dpf43f3p2l4k3l03",
@@ -30,7 +31,11 @@ describe("buildRestRequestConfig", () => {
       params: { method: "flickr.test.echo" },
     });
 
+    const params = new URLSearchParams(config.searchParams);
+    expect(params.get("oauth_consumer_key")).toBe("dpf43f3p2l4k3l03");
+    expect(params.get("oauth_signature_method")).toBe("HMAC-SHA1");
+    expect(params.get("oauth_signature")).toBeTruthy();
     const headers = config.headers as undefined | { Authorization?: string };
-    expect(headers?.Authorization).toContain("OAuth ");
+    expect(headers?.Authorization).toBeUndefined();
   });
 });
