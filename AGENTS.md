@@ -1,6 +1,7 @@
 # Agent Notes
 
 - Always sign commits with GPG. If signing fails in this environment, ask the user to run the commit locally.
+- If a command errors in this environment, report it so the user can run it locally.
 - REST XML requests now support optional OAuth:
   - `consumerSecret` present → OAuth 1.0a params are appended to the query string.
   - `consumerSecret` missing → falls back to public request and injects `api_key` from `consumerKey`.
