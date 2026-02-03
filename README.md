@@ -37,6 +37,23 @@ API documentation is automatically generated using [TypeDoc](https://typedoc.org
 
 - **View the latest documentation**: [GitHub Pages](https://moontaiworks.github.io/flickr-sdk/)
 
+## Testing
+
+Tests load env vars from `.env.test` and `.env.test.local` via the `env` command in the `pnpm test` scripts. The committed `.env.test` file includes empty placeholders; put real Flickr credentials in `.env.test.local` to run OAuth-backed tests locally.
+
+```bash
+FLICKR_CONSUMER_KEY=...
+FLICKR_CONSUMER_SECRET=...
+FLICKR_TOKEN=...
+FLICKR_TOKEN_SECRET=...
+```
+
+Then run:
+
+```bash
+pnpm test
+```
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
