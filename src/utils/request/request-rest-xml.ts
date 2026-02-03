@@ -7,6 +7,15 @@ export interface RequestRestOptions {
   params: SearchParamsOption;
 }
 
+export function buildRestRequestConfig(options: RequestRestOptions) {
+  const { method = "GET", params: searchParams } = options;
+
+  return {
+    method,
+    searchParams,
+  };
+}
+
 const xmlParser = new XMLParser({
   allowBooleanAttributes: true,
   alwaysCreateTextNode: true,
