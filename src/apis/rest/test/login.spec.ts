@@ -1,38 +1,22 @@
-import { describe, expect, it, vi } from "vitest";
-
-import { requestRestXML } from "#utils/request/request-rest-xml.js";
+import { describe, expect, it } from "vitest";
 
 import { login } from "./login.js";
 
-vi.mock("#utils/request/request-rest-xml.js", () => ({
-  requestRestXML: vi.fn(),
-}));
-
 describe("login", () => {
-  it("normalizes username and forwards params", async () => {
-    const requestRestXMLMock = vi.mocked(requestRestXML);
-    requestRestXMLMock.mockResolvedValue({
-      stat: "ok",
-      user: { id: "12037949754@N01", username: { "#text": "Bees" } },
-    });
+  const oauth = {
+    consumerKey: process.env.FLICKR_CONSUMER_KEY!,
+    consumerSecret: process.env.FLICKR_CONSUMER_SECRET!,
+    token: process.env.FLICKR_TOKEN!,
+    tokenSecret: process.env.FLICKR_TOKEN_SECRET!,
+  };
+  const expectedUserId = process.env.FLICKR_USER_ID!;
+  const expectedUsername = process.env.FLICKR_USERNAME!;
 
-    const oauth = {
-      consumerKey: "key",
-      consumerSecret: "secret",
-      token: "token",
-      tokenSecret: "tokenSecret",
-    };
+  it("returns user info with real OAuth tokens", async () => {
+    const response = await login({ oauth }, { format: "rest" });
 
-    const response = await login({ oauth }, { extra: "value" });
-
-    expect(requestRestXMLMock).toHaveBeenCalledWith({
-      oauth,
-      params: { extra: "value", method: "flickr.test.login" },
-    });
-
-    expect(response).toEqual({
-      stat: "ok",
-      user: { id: "12037949754@N01", username: "Bees" },
-    });
-  });
+    expect(response.stat).toBe("ok");
+    expect(response.user.id).toBe(expectedUserId);
+    expect(response.user.username).toBe(expectedUsername);
+  }, 15000);
 });
