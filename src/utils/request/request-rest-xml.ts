@@ -6,6 +6,9 @@ import { createOAuthAuthorizationHeader } from "./oauth";
 
 const endpoint = "https://api.flickr.com/services/rest";
 
+/**
+ * Optional OAuth 1.0a credentials for REST XML requests.
+ */
 export interface OAuthOptions {
   callback?: string;
   consumerKey: string;
@@ -17,6 +20,9 @@ export interface OAuthOptions {
   verifier?: string;
 }
 
+/**
+ * Options for REST XML requests, with optional OAuth signing.
+ */
 export interface RequestRestOptions {
   method?: "GET" | "POST";
   oauth?: OAuthOptions;
@@ -29,6 +35,18 @@ interface RequestConfig {
   searchParams: URLSearchParams;
 }
 
+/**
+ * Build the request config (method, params, headers) for REST XML calls.
+ *
+ * @example
+ * ```ts
+ * const config = await buildRestRequestConfig({
+ *   params: { method: "flickr.test.echo" },
+ *   oauth: { consumerKey: "your-consumer-key" },
+ * });
+ * // If consumerSecret is missing, api_key is injected and no OAuth header is set.
+ * ```
+ */
 export async function buildRestRequestConfig(
   options: RequestRestOptions,
 ): Promise<RequestConfig> {
@@ -42,6 +60,7 @@ export async function buildRestRequestConfig(
     }
 
     if (oauth.consumerSecret) {
+      // Sign request and attach OAuth Authorization header.
       const authorization = await createOAuthAuthorizationHeader({
         method,
         oauth: {
@@ -62,6 +81,7 @@ export async function buildRestRequestConfig(
         Authorization: authorization,
       };
     } else if (!searchParams.has("api_key")) {
+      // Public request fallback for endpoints that allow api_key.
       searchParams.set("api_key", oauth.consumerKey);
     }
   }
@@ -73,6 +93,9 @@ export async function buildRestRequestConfig(
   };
 }
 
+/**
+ * Append a value to URLSearchParams with consistent serialization rules.
+ */
 function appendParam(
   params: URLSearchParams,
   key: string,
@@ -93,6 +116,7 @@ function appendParam(
     return;
   }
 
+  // Serialize primitives and common types into query strings.
   const valueType = typeof value;
   if (
     valueType === "string" ||
@@ -110,10 +134,14 @@ function appendParam(
     return;
   }
 
+  // Fallback to JSON for objects and arrays.
   const serialized = JSON.stringify(value) as string | undefined;
   params.append(key, serialized ?? "");
 }
 
+/**
+ * Normalize ky SearchParamsOption into URLSearchParams.
+ */
 function toSearchParams(params: SearchParamsOption): URLSearchParams {
   if (params instanceof URLSearchParams) {
     return new URLSearchParams(params);
@@ -159,6 +187,37 @@ interface ErrorResponse {
   stat: "fail";
 }
 
+/**
+ * Execute a Flickr REST call and parse the XML response.
+ *
+ * @example
+ * ```ts
+ * const response = await requestRestXML({
+ *   method: "GET",
+ *   params: {
+ *     method: "flickr.test.echo",
+ *     format: "rest",
+ *   },
+ * });
+ * ```
+ *
+ * @example
+ * ```ts
+ * const response = await requestRestXML({
+ *   method: "GET",
+ *   params: {
+ *     method: "flickr.test.login",
+ *     format: "rest",
+ *   },
+ *   oauth: {
+ *     consumerKey: "your-consumer-key",
+ *     consumerSecret: "your-consumer-secret",
+ *     token: "user-token",
+ *     tokenSecret: "user-token-secret",
+ *   },
+ * });
+ * ```
+ */
 export async function requestRestXML<T>(options: RequestRestOptions) {
   const { headers, method, searchParams } =
     await buildRestRequestConfig(options);

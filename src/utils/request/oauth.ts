@@ -1,3 +1,6 @@
+/**
+ * Input required to build an OAuth 1.0a Authorization header.
+ */
 export interface OAuthInput {
   method: "GET" | "POST";
   oauth: {
@@ -17,6 +20,27 @@ export interface OAuthInput {
 const signatureMethod = "HMAC-SHA1";
 const oauthVersion = "1.0";
 
+/**
+ * Create an OAuth 1.0a Authorization header value for the given request.
+ *
+ * @example
+ * ```ts
+ * const header = await createOAuthAuthorizationHeader({
+ *   method: "GET",
+ *   url: "https://api.flickr.com/services/rest",
+ *   params: new URLSearchParams({
+ *     method: "flickr.test.echo",
+ *     format: "json",
+ *   }),
+ *   oauth: {
+ *     consumerKey: "your-consumer-key",
+ *     consumerSecret: "your-consumer-secret",
+ *     token: "user-token",
+ *     tokenSecret: "user-token-secret",
+ *   },
+ * });
+ * ```
+ */
 export async function createOAuthAuthorizationHeader(
   input: OAuthInput,
 ): Promise<string> {
@@ -24,6 +48,7 @@ export async function createOAuthAuthorizationHeader(
   const timestamp =
     input.oauth.timestamp ?? Math.floor(Date.now() / 1000).toString();
 
+  // Base OAuth params used for signature and header.
   const oauthParams: [string, string][] = [
     ["oauth_consumer_key", input.oauth.consumerKey],
     ["oauth_nonce", nonce],
@@ -44,6 +69,7 @@ export async function createOAuthAuthorizationHeader(
     oauthParams.push(["oauth_verifier", input.oauth.verifier]);
   }
 
+  // Signature includes both request query params and OAuth params.
   const baseUrl = normalizeBaseUrl(input.url);
   const urlParams = Array.from(input.params.entries());
   const signatureBase = buildBaseString(input.method, baseUrl, [
@@ -68,6 +94,9 @@ export async function createOAuthAuthorizationHeader(
   return `OAuth ${headerValue}`;
 }
 
+/**
+ * Encode a byte array to base64 in Node or browser environments.
+ */
 function base64Encode(bytes: Uint8Array): string {
   if (typeof Buffer !== "undefined") {
     return Buffer.from(bytes).toString("base64");
@@ -85,6 +114,9 @@ function base64Encode(bytes: Uint8Array): string {
   throw new Error("Base64 encoding is not supported in this environment.");
 }
 
+/**
+ * Create the OAuth 1.0a signature base string.
+ */
 function buildBaseString(
   method: string,
   url: string,
@@ -98,6 +130,9 @@ function buildBaseString(
   ].join("&");
 }
 
+/**
+ * Compute HMAC-SHA1 digest and return a base64 string.
+ */
 async function hmacSha1Base64(message: string, key: string): Promise<string> {
   const { createHMAC, createSHA1 } = await import("hash-wasm");
   const hmac = await createHMAC(createSHA1(), key);
@@ -105,11 +140,17 @@ async function hmacSha1Base64(message: string, key: string): Promise<string> {
   return base64Encode(digest);
 }
 
+/**
+ * Remove query/fragment to match OAuth base URL requirements.
+ */
 function normalizeBaseUrl(url: string): string {
   const parsed = new URL(url);
   return `${parsed.protocol}//${parsed.host}${parsed.pathname}`;
 }
 
+/**
+ * Sort and percent-encode params for the OAuth signature base string.
+ */
 function normalizeParams(params: [string, string][]): string {
   const encoded = params.map(([key, value]) => ({
     key: rfc3986Encode(key),
@@ -127,12 +168,18 @@ function normalizeParams(params: [string, string][]): string {
   return encoded.map(({ key, value }) => `${key}=${value}`).join("&");
 }
 
+/**
+ * RFC 3986 compliant percent-encoding.
+ */
 function rfc3986Encode(value: string): string {
   return encodeURIComponent(value).replace(/[!'()*]/g, (char) => {
     return `%${char.charCodeAt(0).toString(16).toUpperCase()}`;
   });
 }
 
+/**
+ * OAuth signing key: consumer secret + token secret.
+ */
 function signingKey(consumerSecret: string, tokenSecret?: string): string {
   return `${rfc3986Encode(consumerSecret)}&${rfc3986Encode(tokenSecret ?? "")}`;
 }
