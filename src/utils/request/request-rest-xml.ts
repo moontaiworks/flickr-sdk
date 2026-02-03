@@ -155,7 +155,7 @@ function toSearchParams(params: SearchParamsOption): URLSearchParams {
 
   if (Array.isArray(params)) {
     for (const [key, value] of params) {
-      appendParam(searchParams, key, value);
+      appendParam(searchParams, key.toString(), value);
     }
 
     return searchParams;
