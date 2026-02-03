@@ -171,7 +171,7 @@ function toSearchParams(params: SearchParamsOption): URLSearchParams {
 
 const xmlParser = new XMLParser({
   allowBooleanAttributes: true,
-  alwaysCreateTextNode: true,
+  alwaysCreateTextNode: false,
   attributeNamePrefix: "",
   attributesGroupName: false,
   ignoreAttributes: false,
