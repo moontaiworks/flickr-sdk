@@ -13,7 +13,7 @@ describe("login", () => {
   const expectedUsername = process.env.FLICKR_USERNAME!;
 
   it("returns user info with real OAuth tokens", async () => {
-    const response = await login({ oauth }, { format: "rest" });
+    const response = await login({ oauth });
 
     expect(response.stat).toBe("ok");
     expect(response.user.id).toBe(expectedUserId);
