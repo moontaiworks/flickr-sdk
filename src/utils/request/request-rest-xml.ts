@@ -6,6 +6,11 @@ import { createOAuthParams } from "./oauth";
 
 const endpoint = "https://api.flickr.com/services/rest";
 
+export type AnySearchParams = Record<
+  string,
+  boolean | number | string | undefined
+>;
+
 /**
  * Optional OAuth 1.0a credentials for REST XML requests.
  */
@@ -26,7 +31,7 @@ export interface OAuthOptions {
 export interface RequestRestOptions {
   method?: "GET" | "POST";
   oauth?: OAuthOptions;
-  params: SearchParamsOption;
+  params?: AnySearchParams;
 }
 
 interface RequestConfig {
