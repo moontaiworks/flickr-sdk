@@ -10,8 +10,6 @@
 
     // Recommended Options
     "strict": true,
-    // Force all non-type imports being preserved
-    "verbatimModuleSyntax": true,
     "noUncheckedSideEffectImports": true,
     // Treat files as modules even if it doesn't use import/export
     "moduleDetection": "force",
@@ -25,6 +23,10 @@
     // This flag will be overwrite when building the project
     "noEmit": true,
     "incremental": true,
+    "tsBuildInfoFile": "./.tsbuild/.tsbuildinfo",
+    "paths": {
+      "#*": ["./src/*"]
+    },
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,

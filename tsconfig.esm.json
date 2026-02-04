@@ -4,7 +4,8 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "rootDir": "./src",
-    "outDir": "./dist/esm"
+    "outDir": "./dist/esm",
+    "noEmit": false
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts", "tests"]
