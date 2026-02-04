@@ -17,6 +17,14 @@ jobs:
       matrix:
         node-version: [20.x, 22.x, 24.x]
 
+    env:
+      FLICKR_CONSUMER_KEY: ${{ secrets.FLICKR_CONSUMER_KEY }}
+      FLICKR_CONSUMER_SECRET: ${{ secrets.FLICKR_CONSUMER_SECRET }}
+      FLICKR_TOKEN: ${{ secrets.FLICKR_TOKEN }}
+      FLICKR_TOKEN_SECRET: ${{ secrets.FLICKR_TOKEN_SECRET }}
+      FLICKR_USER_ID: ${{ vars.FLICKR_USER_ID }}
+      FLICKR_USERNAME: ${{ vars.FLICKR_USERNAME }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
@@ -36,20 +44,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run type check
-        run: pnpm run typecheck
-
-      - name: Run linter
-        run: pnpm run lint
-
-      - name: Check code formatting
-        run: pnpm run format:check
+      - name: Run style checks
+        run: pnpm run '/^(lint|format:check|typecheck)$/'
 
       - name: Build project
         run: pnpm run build
 
       - name: Run tests with coverage
-        run: pnpm test:coverage
+        run: npx -y vitest run --coverage
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
