@@ -1,27 +1,52 @@
 import type { BeforeRequestHook, NormalizedOptions } from "ky";
 import { default as kyInit } from "ky";
 
+import type { OAuthCredentials } from "./oauth.js";
+import { sign } from "./oauth.js";
 import { parseFlickrXML } from "./xml-parser.js";
 
-interface Context {
-  apiKey?: string;
-  oauth?: {
-    consumerSecret: string;
-  };
+export interface OAuthContext {
+  /**
+   * Application API key from Flickr.
+   * @see https://www.flickr.com/services/apps/by/me
+   */
+  consumerKey?: string;
+  /**
+   * Application API secret from Flickr, required for OAuth signing.
+   * @see https://www.flickr.com/services/apps/by/me
+   */
+  consumerSecret?: string;
+  /**
+   * User credentials for OAuth signing, required if making requests on behalf
+   * of a user. Optional if only making requests that require application-level
+   * authentication.
+   * @see https://www.flickr.com/services/api/auth.oauth.html
+   */
+  oauthUser?: UserCredentials;
+  /**
+   * Whether to use OAuth for signing requests. If false or omitted, the API key
+   * will be attached as a query parameter.
+   */
+  useOAuth?: boolean;
+}
+
+interface UserCredentials {
+  token: string;
+  tokenSecret: string;
 }
 
 const attachAuth: BeforeRequestHook = async (request, options) => {
   console.debug("Preparing to attach authentication credentials...");
-  const { apiKey, oauth } = options.context as Context;
+  const { consumerKey, useOAuth } = options.context as OAuthContext;
 
-  if (!apiKey) {
+  if (!consumerKey) {
     console.debug("No API key provided; proceeding without authentication.");
     return;
   }
 
-  if (oauth) return attachOAuth(request, options);
+  if (useOAuth) return attachOAuth(request, options);
 
-  return attachApiKey(request, apiKey);
+  return attachApiKey(request, consumerKey);
 };
 
 function attachApiKey(request: Request, apiKey: string): Request {
@@ -36,19 +61,27 @@ async function attachOAuth(
   options: NormalizedOptions,
 ): Promise<Request> {
   console.debug("Attaching OAuth credentials to request...");
-  const { oauth } = options.context as Context;
-  if (!oauth?.consumerSecret)
+  const { consumerKey, consumerSecret, oauthUser } =
+    options.context as OAuthContext;
+  if (!consumerSecret)
     throw new Error("OAuth consumer secret is required for signing requests.");
 
-  if (request.body instanceof FormData)
-    return handleFormData(request, request.body);
+  const credentials: OAuthCredentials = {
+    consumerKey: consumerKey!,
+    consumerSecret,
+    user: oauthUser,
+  };
 
-  return handleSearchParams(request);
+  if (request.body instanceof FormData)
+    return handleFormData(request, request.body, credentials);
+
+  return handleSearchParams(request, credentials);
 }
 
 async function handleFormData(
   request: Request,
   body: FormData,
+  credentials: OAuthCredentials,
 ): Promise<Request> {
   const url = new URL(request.url);
   // if body present, force encode all params as URLSearchParams for signing
@@ -57,20 +90,28 @@ async function handleFormData(
     url.searchParams.set(key, value);
   }
 
-  // TODO: sign the request with OAuth params
-  await Promise.resolve(); // Placeholder for async signing logic
+  await sign(url, {
+    credentials,
+    method: request.method,
+  });
 
   // Reconstruct body from signed params
   for (const [key, value] of url.searchParams.entries()) body.set(key, value);
+  url.search = ""; // Clear query params since they're now in the body
 
   return new Request(url, { body });
 }
 
-async function handleSearchParams(request: Request) {
+async function handleSearchParams(
+  request: Request,
+  credentials: OAuthCredentials,
+) {
   const url = new URL(request.url);
 
-  // TODO: sign the request with OAuth params
-  await Promise.resolve(); // Placeholder for async signing logic
+  await sign(url, {
+    credentials,
+    method: request.method,
+  });
 
   return new Request(url);
 }
