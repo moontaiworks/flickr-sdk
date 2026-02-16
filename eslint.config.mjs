@@ -40,7 +40,11 @@ export default [
     languageOptions: {
       parser: tsParser,
       parserOptions: {
-        projectService: true,
+        project: [
+          "./src/tsconfig.json",
+          "./tests/tsconfig.check.json",
+          "./tsconfig.json",
+        ],
       },
     },
     rules: {
