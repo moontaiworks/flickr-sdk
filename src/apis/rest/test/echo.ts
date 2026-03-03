@@ -18,13 +18,21 @@ export default async function endpoint<R extends EchoOptions>(
   payload: R,
   options?: GeneralOptions,
 ): Promise<EchoResponse<R>> {
-  const { credentials } = { ...this?.options, ...options };
+  const mergedOptions = { ...this?.options, ...options };
   const searchParams = {
     method: "flickr.test.echo",
     ...payload,
   } as const;
 
   return ky
-    .get<EchoResponse<R>>("rest", { context: { ...credentials }, searchParams })
+    .get<EchoResponse<R>>("rest", {
+      context: {
+        consumerKey: mergedOptions.consumerKey,
+        consumerSecret: mergedOptions.consumerSecret,
+        oauthUser: mergedOptions.oauthUser,
+        useOAuth: mergedOptions.useOAuth,
+      },
+      searchParams,
+    })
     .then((response) => response.json());
 }

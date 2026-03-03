@@ -4,10 +4,8 @@ it("should success response", async () => {
   const response = await endpoint(
     { hello: "world" },
     {
-      credentials: {
-        consumerKey: process.env.FLICKR_CONSUMER_KEY!,
-        consumerSecret: process.env.FLICKR_CONSUMER_SECRET!,
-      },
+      consumerKey: process.env.FLICKR_CONSUMER_KEY!,
+      consumerSecret: process.env.FLICKR_CONSUMER_SECRET!,
     },
   );
 

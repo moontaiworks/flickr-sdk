@@ -2,10 +2,8 @@ import { createFlickr } from "#index.js";
 
 it("should success response", async () => {
   const flickr = createFlickr({
-    credentials: {
-      consumerKey: process.env.FLICKR_CONSUMER_KEY!,
-      consumerSecret: process.env.FLICKR_CONSUMER_SECRET!,
-    },
+    consumerKey: process.env.FLICKR_CONSUMER_KEY!,
+    consumerSecret: process.env.FLICKR_CONSUMER_SECRET!,
   });
   const response = await flickr.rest.test.echo({ hello: "world" });
 
