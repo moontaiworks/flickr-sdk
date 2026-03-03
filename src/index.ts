@@ -1,3 +1,3 @@
-import { default as apis } from "#apis/index.js";
+import { default as apis, createFlickr } from "#apis/index.js";
 
-export { apis };
+export { apis, createFlickr };
