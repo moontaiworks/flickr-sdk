@@ -9,6 +9,8 @@ const xmlParser = new XMLParser({
   ignoreDeclaration: true,
 });
 
+export type FlickrOkResponse<T = unknown> = T & { stat: "ok" };
+
 interface FlickrErrorResponse {
   err: {
     code: string;
@@ -16,8 +18,6 @@ interface FlickrErrorResponse {
   };
   stat: "fail";
 }
-
-type FlickrOkResponse<T = unknown> = T & { stat: "ok" };
 
 interface FlickrResponse<T = unknown> {
   rsp: FlickrErrorResponse | FlickrOkResponse<T>;

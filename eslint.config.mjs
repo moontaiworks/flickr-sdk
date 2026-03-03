@@ -53,6 +53,7 @@ export default [
         { disallowTypeAnnotations: false },
       ],
       "@typescript-eslint/no-import-type-side-effects": "error",
+      "@typescript-eslint/no-invalid-void-type": "off",
       "@typescript-eslint/no-non-null-assertion": "off",
       "@typescript-eslint/restrict-template-expressions": [
         "error",

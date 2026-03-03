@@ -54,10 +54,11 @@
     "format:check": "prettier --check \"src/**/*.ts\"",
     "typecheck": "tsc -p src/tsconfig.json --noEmit",
     "prepublishOnly": "pnpm run clean && pnpm run build",
-    "test": "env $(cat .env.test .env.test.local 2>/dev/null | grep -v '^#' | xargs) vitest run --typecheck",
-    "test:watch": "env $(cat .env.test .env.test.local 2>/dev/null | grep -v '^#' | xargs) vitest --typecheck",
-    "test:ui": "env $(cat .env.test .env.test.local 2>/dev/null | grep -v '^#' | xargs) vitest --ui",
-    "test:coverage": "env $(cat .env.test .env.test.local 2>/dev/null | grep -v '^#' | xargs) vitest run --coverage",
+    "env:test": "env $(cat .env.test .env.test.local 2>/dev/null | grep -v '^#' | xargs)",
+    "test": "pnpm env:test vitest run --typecheck",
+    "test:watch": "pnpm env:test vitest --typecheck",
+    "test:ui": "pnpm env:test vitest --ui",
+    "test:coverage": "pnpm env:test vitest run --coverage",
     "prepare": "husky install"
   },
   "keywords": [
