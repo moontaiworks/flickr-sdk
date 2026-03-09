@@ -75,6 +75,9 @@ async function attachOAuth(
   if (request.body instanceof FormData)
     return handleFormData(request, request.body, credentials);
 
+  if (request.method.toUpperCase() === "POST")
+    return handlePostSearchParams(request, credentials);
+
   return handleSearchParams(request, credentials);
 }
 
@@ -100,6 +103,23 @@ async function handleFormData(
   url.search = ""; // Clear query params since they're now in the body
 
   return new Request(url, { body });
+}
+
+async function handlePostSearchParams(
+  request: Request,
+  credentials: OAuthCredentials,
+) {
+  const url = new URL(request.url);
+
+  await sign(url, {
+    credentials,
+    method: request.method,
+  });
+
+  const searchParams = new URLSearchParams(url.search);
+  url.search = ""; // Clear query params since they'll be included in the body
+
+  return new Request(url, { body: searchParams, method: request.method });
 }
 
 async function handleSearchParams(
