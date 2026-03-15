@@ -7,6 +7,7 @@ const xmlParser = new XMLParser({
   attributesGroupName: false,
   ignoreAttributes: false,
   ignoreDeclaration: true,
+  parseTagValue: false,
 });
 
 export type FlickrOkResponse<T = unknown> = T & { stat: "ok" };
