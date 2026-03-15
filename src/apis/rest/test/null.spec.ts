@@ -1,6 +1,7 @@
-import { default as endpoint } from "./null.js";
+import createEndpoint from "./null.js";
 
 it("should success response", async () => {
+  const endpoint = createEndpoint();
   const response = await endpoint({
     consumerKey: process.env.FLICKR_CONSUMER_KEY!,
     consumerSecret: process.env.FLICKR_CONSUMER_SECRET!,
