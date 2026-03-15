@@ -72,37 +72,10 @@ async function attachOAuth(
     user: oauthUser,
   };
 
-  if (request.body instanceof FormData)
-    return handleFormData(request, request.body, credentials);
-
   if (request.method.toUpperCase() === "POST")
     return handlePostSearchParams(request, credentials);
 
   return handleSearchParams(request, credentials);
-}
-
-async function handleFormData(
-  request: Request,
-  body: FormData,
-  credentials: OAuthCredentials,
-): Promise<Request> {
-  const url = new URL(request.url);
-  // if body present, force encode all params as URLSearchParams for signing
-  for (const [key, value] of body.entries()) {
-    if (typeof value !== "string") continue; // Skip non-string values for OAuth signing
-    url.searchParams.set(key, value);
-  }
-
-  await sign(url, {
-    credentials,
-    method: request.method,
-  });
-
-  // Reconstruct body from signed params
-  for (const [key, value] of url.searchParams.entries()) body.set(key, value);
-  url.search = ""; // Clear query params since they're now in the body
-
-  return new Request(url, { body });
 }
 
 async function handlePostSearchParams(
