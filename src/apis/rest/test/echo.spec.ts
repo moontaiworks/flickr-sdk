@@ -1,6 +1,7 @@
-import { default as endpoint } from "./echo.js";
+import createEndpoint from "./echo.js";
 
 it("should success response", async () => {
+  const endpoint = createEndpoint();
   const response = await endpoint(
     { hello: "world" },
     {
