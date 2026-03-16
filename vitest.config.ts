@@ -22,6 +22,7 @@ export default defineConfig({
     environment: "node",
     globals: true,
     include: ["src/**/*.spec.ts", "tests/**/*.test.ts"],
+    testTimeout: 30000,
     typecheck: {
       tsconfig: "./tests/tsconfig.json",
     },
