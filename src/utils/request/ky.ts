@@ -36,21 +36,13 @@ interface UserCredentials {
 }
 
 const attachAuth: BeforeRequestHook = async (request, options) => {
-  console.debug("Preparing to attach authentication credentials...");
   const { consumerKey, useOAuth } = options.context as OAuthContext;
-
-  if (!consumerKey) {
-    console.debug("No API key provided; proceeding without authentication.");
-    return;
-  }
-
+  if (!consumerKey) return;
   if (useOAuth) return attachOAuth(request, options);
-
   return attachApiKey(request, consumerKey);
 };
 
 function attachApiKey(request: Request, apiKey: string): Request {
-  console.debug("Attaching API key to request...");
   const url = new URL(request.url);
   url.searchParams.set("api_key", apiKey);
   return new Request(url, request);
@@ -60,7 +52,6 @@ async function attachOAuth(
   request: Request,
   options: NormalizedOptions,
 ): Promise<Request> {
-  console.debug("Attaching OAuth credentials to request...");
   const { consumerKey, consumerSecret, oauthUser } =
     options.context as OAuthContext;
   if (!consumerSecret)
