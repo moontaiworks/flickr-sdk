@@ -12,7 +12,7 @@ const requestTokenResponse = await flickr.oauth.requestToken(
 
 console.log("Request Token Response:", requestTokenResponse);
 
-const url = constructAuthUrl(requestTokenResponse.oauth_token, "write");
+const url = constructAuthUrl(requestTokenResponse.oauth_token, "delete");
 console.log("Authorization URL:", url);
 
 const verifier = await Readline.createInterface({
