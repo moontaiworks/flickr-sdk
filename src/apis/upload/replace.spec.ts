@@ -33,7 +33,7 @@ beforeAll(async () => {
 
 afterAll(async () => createPhotosDeleteEndpoint()({ photoId }, options));
 
-it("should success response", { timeout: 60000 }, async () => {
+it("should success response", async () => {
   // We have to wait a while for Flickr to update or it will fail to replace
   await new Promise((resolve) =>
     setTimeout(() => {
