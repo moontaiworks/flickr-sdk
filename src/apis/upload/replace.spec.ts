@@ -1,6 +1,8 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
+import createPhotosDeleteEndpoint from "#apis/rest/photos/delete.js";
+
 import createReplaceEndpoint from "./replace.js";
 import createUploadEndpoint from "./upload.js";
 
@@ -28,6 +30,8 @@ beforeAll(async () => {
   );
   photoId = uploadResponse.photoid;
 }, 60000);
+
+afterAll(async () => createPhotosDeleteEndpoint()({ photoId }, options));
 
 it("should success response", { timeout: 60000 }, async () => {
   // We have to wait a while for Flickr to update or it will fail to replace
