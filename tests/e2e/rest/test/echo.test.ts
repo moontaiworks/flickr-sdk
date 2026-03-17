@@ -1,10 +1,8 @@
 import { createFlickr } from "#index.js";
+import { systemCredentials } from "#tests/config.js";
 
 it("should success response", async () => {
-  const flickr = createFlickr({
-    consumerKey: process.env.FLICKR_CONSUMER_KEY!,
-    consumerSecret: process.env.FLICKR_CONSUMER_SECRET!,
-  });
+  const flickr = createFlickr(systemCredentials);
   const response = await flickr.test.echo({ hello: "world" });
 
   expect(response).toStrictEqual({

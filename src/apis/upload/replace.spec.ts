@@ -2,18 +2,10 @@ import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
 import createPhotosDeleteEndpoint from "#apis/rest/photos/delete.js";
+import { userCredentials } from "#tests/config.js";
 
 import createReplaceEndpoint from "./replace.js";
 import createUploadEndpoint from "./upload.js";
-
-const options = {
-  consumerKey: process.env.FLICKR_CONSUMER_KEY!,
-  consumerSecret: process.env.FLICKR_CONSUMER_SECRET!,
-  oauthUser: {
-    token: process.env.FLICKR_TOKEN!,
-    tokenSecret: process.env.FLICKR_TOKEN_SECRET!,
-  },
-};
 
 let photoId: string;
 
@@ -26,19 +18,21 @@ beforeAll(async () => {
         { type: "image/jpeg" },
       ),
     },
-    options,
+    userCredentials,
   );
   photoId = uploadResponse.photoid;
 }, 60000);
 
-afterAll(async () => createPhotosDeleteEndpoint()({ photoId }, options));
+afterAll(async () =>
+  createPhotosDeleteEndpoint()({ photoId }, userCredentials),
+);
 
-it("should success response", async () => {
+it("should success response", { retry: 5 }, async () => {
   // We have to wait a while for Flickr to update or it will fail to replace
   await new Promise((resolve) =>
     setTimeout(() => {
       resolve(undefined);
-    }, 5000),
+    }, 1000),
   );
 
   const response = await createReplaceEndpoint()(
@@ -50,7 +44,7 @@ it("should success response", async () => {
       ),
       photoId: photoId,
     },
-    options,
+    userCredentials,
   );
 
   expect(response).toStrictEqual({
