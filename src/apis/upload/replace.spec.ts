@@ -27,14 +27,7 @@ afterAll(async () =>
   createPhotosDeleteEndpoint()({ photoId }, userCredentials),
 );
 
-it("should success response", { retry: 5 }, async () => {
-  // We have to wait a while for Flickr to update or it will fail to replace
-  await new Promise((resolve) =>
-    setTimeout(() => {
-      resolve(undefined);
-    }, 1000),
-  );
-
+it("should success response", async () => {
   const response = await createReplaceEndpoint()(
     {
       photo: new File(
