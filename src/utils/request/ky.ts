@@ -104,4 +104,5 @@ export const ky = kyInit.extend({
   hooks: { beforeRequest: [attachAuth] },
   parseJson: parseFlickrXML,
   prefixUrl: "https://api.flickr.com/services",
+  timeout: 60000,
 });
