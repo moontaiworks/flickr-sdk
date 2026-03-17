@@ -1,15 +1,14 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
-import createUploadEndpoint from "#apis/upload/upload.js";
+import { createFlickr } from "#index.js";
 import { userCredentials } from "#tests/config.js";
 
-import createEndpoint from "./delete.js";
-
+const flickr = createFlickr(userCredentials);
 let photoId: string;
 
 beforeAll(async () => {
-  const uploadResponse = await createUploadEndpoint()(
+  const uploadResponse = await flickr.upload(
     {
       photo: new File(
         [await readFile(resolve("tests/assets/0001.jpg"))],
@@ -22,11 +21,19 @@ beforeAll(async () => {
   photoId = uploadResponse.photoid;
 });
 
+afterAll(async () => flickr.photos.delete({ photoId }));
+
 it("should success response", async () => {
-  const endpoint = createEndpoint();
-  const response = await endpoint({ photoId }, userCredentials);
+  const response = await flickr.photosets.create(
+    { primaryPhotoId: photoId, title: "Test Photoset" },
+    userCredentials,
+  );
 
   expect(response).toStrictEqual({
+    photoset: {
+      id: expect.any(String) as string,
+      url: expect.any(String) as string,
+    },
     stat: "ok",
   });
 });

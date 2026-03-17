@@ -1,38 +1,33 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
-import createUploadEndpoint from "#apis/upload/upload.js";
+import { createFlickr } from "#index.js";
 import { userCredentials } from "#tests/config.js";
 
-import createPhotosDelete from "../delete.js";
-import createEndpoint from "./check-tickets.js";
+const flickr = createFlickr(userCredentials);
 
 describe("single photo", () => {
   let photoId: string;
   let ticketId: string;
 
   beforeAll(async () => {
-    const uploadResponse = await createUploadEndpoint()(
-      {
-        async: true,
-        photo: new File(
-          [await readFile(resolve("tests/assets/0001.jpg"))],
-          "0001.jpg",
-          { type: "image/jpeg" },
-        ),
-      },
-      userCredentials,
-    );
+    const uploadResponse = await flickr.upload({
+      async: true,
+      photo: new File(
+        [await readFile(resolve("tests/assets/0001.jpg"))],
+        "0001.jpg",
+        { type: "image/jpeg" },
+      ),
+    });
     ticketId = uploadResponse.ticketid;
   });
 
   it("should success response", async () => {
-    let response: Awaited<ReturnType<ReturnType<typeof createEndpoint>>>;
+    let response: Awaited<ReturnType<typeof flickr.photos.upload.checkTickets>>;
     do {
-      response = await createEndpoint()(
-        { tickets: [ticketId] },
-        userCredentials,
-      );
+      response = await flickr.photos.upload.checkTickets({
+        tickets: [ticketId],
+      });
 
       expect(response).toStrictEqual({
         stat: "ok",
@@ -56,5 +51,5 @@ describe("single photo", () => {
     photoId = response.uploader.ticket.photoid;
   });
 
-  afterAll(async () => createPhotosDelete(userCredentials)({ photoId }));
+  afterAll(async () => flickr.photos.delete({ photoId }));
 });
