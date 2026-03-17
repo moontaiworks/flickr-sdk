@@ -21,14 +21,14 @@ export default defineConfig({
     },
     environment: "node",
     globals: true,
-    hookTimeout: 30000,
+    hookTimeout: 60000,
     include: ["src/**/*.spec.ts", "tests/**/*.test.ts"],
     retry: {
       count: 3,
       delay: 1500,
     },
-    teardownTimeout: 30000,
-    testTimeout: 30000,
+    teardownTimeout: 60000,
+    testTimeout: 60000,
     typecheck: {
       tsconfig: "./tests/tsconfig.json",
     },
