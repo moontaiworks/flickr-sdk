@@ -4,13 +4,27 @@ import { ky } from "#utils/request/ky.js";
 export interface PhotosUploadCheckTicketsParams {
   tickets: string[];
 }
-export interface PhotosUploadCheckTicketsResponse {
+
+export type PhotosUploadCheckTicketsResponse =
+  | PhotosUploadCheckTicketsResponseDone
+  | PhotosUploadCheckTicketsResponseProcessing;
+
+interface PhotosUploadCheckTicketsResponseDone {
   uploader: {
     ticket: {
-      complete: string;
+      complete: "1";
       id: string;
       imported: string;
       photoid: string;
+    };
+  };
+}
+
+interface PhotosUploadCheckTicketsResponseProcessing {
+  uploader: {
+    ticket: {
+      complete: "0";
+      id: string;
     };
   };
 }

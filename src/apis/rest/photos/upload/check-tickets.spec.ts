@@ -27,22 +27,31 @@ describe("single photo", () => {
   });
 
   it("should success response", async () => {
-    const response = await createEndpoint()(
-      { tickets: [ticketId] },
-      userCredentials,
-    );
+    let response: Awaited<ReturnType<ReturnType<typeof createEndpoint>>>;
+    do {
+      response = await createEndpoint()(
+        { tickets: [ticketId] },
+        userCredentials,
+      );
 
-    expect(response).toStrictEqual({
-      stat: "ok",
-      uploader: {
-        ticket: {
-          complete: expect.any(String) as string,
-          id: expect.any(String) as string,
-          imported: expect.any(String) as string,
-          photoid: expect.any(String) as string,
+      expect(response).toStrictEqual({
+        stat: "ok",
+        uploader: {
+          ticket: expect.toBeOneOf([
+            {
+              complete: "1",
+              id: expect.any(String) as string,
+              imported: expect.any(String) as string,
+              photoid: expect.any(String) as string,
+            },
+            {
+              complete: "0",
+              id: expect.any(String) as string,
+            },
+          ]) as object[],
         },
-      },
-    });
+      });
+    } while (response.uploader.ticket.complete === "0");
 
     photoId = response.uploader.ticket.photoid;
   });
