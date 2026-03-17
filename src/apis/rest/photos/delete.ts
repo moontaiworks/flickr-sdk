@@ -7,7 +7,7 @@ export interface PhotosDeleteParams {
 }
 export type PhotosDeleteResponse = FlickrOkResponse;
 
-export default function (optionsDefault?: GeneralOptions) {
+export default function createPhotosDelete(optionsDefault?: GeneralOptions) {
   /**
    * Delete a photo from flickr.
    *

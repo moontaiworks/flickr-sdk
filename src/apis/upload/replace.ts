@@ -33,7 +33,7 @@ export interface ReplaceResponse {
   ticketId?: string;
 }
 
-export default function createEndpoint(optionsDefault?: GeneralOptions) {
+export default function createReplace(optionsDefault?: GeneralOptions) {
   /**
    * Replacing Photos.
    *

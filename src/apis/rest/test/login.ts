@@ -5,7 +5,7 @@ import type { FlickrOkResponse } from "#utils/request/xml-parser.js";
 export type TestLoginParams = never;
 export type TestLoginResponse = FlickrOkResponse;
 
-export default function createEndpoint(optionsDefault?: GeneralOptions) {
+export default function createTestLogin(optionsDefault?: GeneralOptions) {
   /**
    * A testing method which checks if the caller is logged in then returns their username.
    *
