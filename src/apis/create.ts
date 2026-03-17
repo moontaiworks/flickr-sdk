@@ -3,6 +3,7 @@ import createRequestToken from "./auth/request-token.js";
 import type { GeneralOptions } from "./options.js";
 import createPhotosDelete from "./rest/photos/delete.js";
 import createPhotosUploadCheckTickets from "./rest/photos/upload/check-tickets.js";
+import createPhotosetsAddPhoto from "./rest/photosets/add-photo.js";
 import createPhotosetsCreate from "./rest/photosets/create.js";
 import createPhotosetsDelete from "./rest/photosets/delete.js";
 import createTestEcho from "./rest/test/echo.js";
@@ -24,6 +25,7 @@ export default function createEndpoint(optionsDefault?: GeneralOptions) {
       },
     },
     photosets: {
+      addPhoto: createPhotosetsAddPhoto(optionsDefault),
       create: createPhotosetsCreate(optionsDefault),
       delete: createPhotosetsDelete(optionsDefault),
     },
