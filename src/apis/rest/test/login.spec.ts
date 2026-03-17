@@ -1,15 +1,10 @@
+import { userCredentials } from "#tests/config.js";
+
 import createEndpoint from "./login.js";
 
 it("should success response", async () => {
   const endpoint = createEndpoint();
-  const response = await endpoint({
-    consumerKey: process.env.FLICKR_CONSUMER_KEY!,
-    consumerSecret: process.env.FLICKR_CONSUMER_SECRET!,
-    oauthUser: {
-      token: process.env.FLICKR_TOKEN!,
-      tokenSecret: process.env.FLICKR_TOKEN_SECRET!,
-    },
-  });
+  const response = await endpoint(userCredentials);
 
   expect(response).toStrictEqual({
     stat: "ok",
