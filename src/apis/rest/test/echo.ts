@@ -5,7 +5,7 @@ import type { FlickrOkResponse } from "#utils/request/xml-parser.js";
 export type TestEchoParams = object;
 export type TestEchoResponse<R extends TestEchoParams> = FlickrOkResponse<R>;
 
-export default function createEndpoint(optionsDefault?: GeneralOptions) {
+export default function createTestEcho(optionsDefault?: GeneralOptions) {
   /**
    * A testing method which echo's all parameters back in the response.
    *
