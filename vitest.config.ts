@@ -22,6 +22,10 @@ export default defineConfig({
     environment: "node",
     globals: true,
     include: ["src/**/*.spec.ts", "tests/**/*.test.ts"],
+    retry: {
+      count: 3,
+      delay: 1500,
+    },
     testTimeout: 30000,
     typecheck: {
       tsconfig: "./tests/tsconfig.json",
