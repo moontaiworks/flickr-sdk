@@ -24,9 +24,6 @@
     "noEmit": true,
     "incremental": true,
     "tsBuildInfoFile": "./.tsbuild/.tsbuildinfo",
-    "paths": {
-      "#*": ["./src/*"]
-    },
     "declaration": true,
     "declarationMap": true,
     "sourceMap": true,
@@ -47,6 +44,7 @@
   "exclude": ["node_modules", "dist", "build", "docs", "coverage"],
   "references": [
     { "path": "./src/tsconfig.json" },
+    { "path": "./tests/tsconfig.json" },
     { "path": "./tests/tsconfig.check.json" },
     { "path": "./tsconfig.check.json" }
   ]

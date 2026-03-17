@@ -43,7 +43,7 @@ export default [
         project: [
           "./src/tsconfig.json",
           "./tests/tsconfig.check.json",
-          "./tsconfig.json",
+          "./tsconfig.check.json",
         ],
       },
     },

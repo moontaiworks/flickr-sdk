@@ -6,6 +6,9 @@
     "rootDir": ".",
     "outDir": "../.tsbuild/src",
 
+    "paths": {
+      "#*": ["./src/*"]
+    },
     "noEmit": false,
     "noEmitOnError": true,
     "sourceMap": true,
