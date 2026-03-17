@@ -14,9 +14,7 @@ export interface RequestTokenResponse {
   oauth_token_secret: string;
 }
 
-export default function createRequestTokenEndpoint(
-  optionsDefault?: GeneralOptions,
-) {
+export default function createRequestToken(optionsDefault?: GeneralOptions) {
   /**
    * Getting a Request Token.
    *

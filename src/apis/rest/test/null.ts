@@ -5,7 +5,7 @@ import type { FlickrOkResponse } from "#utils/request/xml-parser.js";
 export type TestNullParams = never;
 export type TestNullResponse = FlickrOkResponse;
 
-export default function createEndpoint(optionsDefault?: GeneralOptions) {
+export default function createTestNull(optionsDefault?: GeneralOptions) {
   /**
    * Null test
    *

@@ -80,7 +80,7 @@ export interface UploadResponse {
   ticketid?: string;
 }
 
-export default function createEndpoint(optionsDefault?: GeneralOptions) {
+export default function createUpload(optionsDefault?: GeneralOptions) {
   /**
    * Uploading Photos.
    *

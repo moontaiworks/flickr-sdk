@@ -1,24 +1,28 @@
-import createAccessTokenEndpoint from "./auth/access-token.js";
-import createRequestTokenEndpoint from "./auth/request-token.js";
+import createAccessToken from "./auth/access-token.js";
+import createRequestToken from "./auth/request-token.js";
 import type { GeneralOptions } from "./options.js";
-import createFlickrPhotosDelete from "./rest/photos/delete.js";
-import createFlickrTestEcho from "./rest/test/echo.js";
-import createFlickrTestLogin from "./rest/test/login.js";
-import createFlickrTestNull from "./rest/test/null.js";
+import createPhotosDelete from "./rest/photos/delete.js";
+import createTestEcho from "./rest/test/echo.js";
+import createTestLogin from "./rest/test/login.js";
+import createTestNull from "./rest/test/null.js";
+import createReplace from "./upload/replace.js";
+import createUpload from "./upload/upload.js";
 
 export default function createEndpoint(optionsDefault?: GeneralOptions) {
   return {
     oauth: {
-      accessToken: createAccessTokenEndpoint(optionsDefault),
-      requestToken: createRequestTokenEndpoint(optionsDefault),
+      accessToken: createAccessToken(optionsDefault),
+      requestToken: createRequestToken(optionsDefault),
     },
     photos: {
-      delete: createFlickrPhotosDelete,
+      delete: createPhotosDelete(optionsDefault),
     },
+    replace: createReplace(optionsDefault),
     test: {
-      echo: createFlickrTestEcho(optionsDefault),
-      login: createFlickrTestLogin(optionsDefault),
-      null: createFlickrTestNull(optionsDefault),
+      echo: createTestEcho(optionsDefault),
+      login: createTestLogin(optionsDefault),
+      null: createTestNull(optionsDefault),
     },
+    upload: createUpload(optionsDefault),
   };
 }

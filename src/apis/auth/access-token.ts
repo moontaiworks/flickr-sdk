@@ -29,7 +29,7 @@ export interface AccessTokenResponse {
   username: string;
 }
 
-export default function createEndpoint(optionsDefault?: GeneralOptions) {
+export default function createAccessToken(optionsDefault?: GeneralOptions) {
   /**
    * Exchanging the Request Token for an Access Token.
    *
