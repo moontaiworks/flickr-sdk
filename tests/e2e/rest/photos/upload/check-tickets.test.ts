@@ -1,17 +1,14 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 
-import { createFlickr } from "#index.js";
-import { userCredentials } from "#tests/config.js";
-
-const flickr = createFlickr(userCredentials);
+import { flickr, flickrWithAuth, userCredentials } from "#tests/config.js";
 
 describe("single photo", () => {
   let photoId: string;
   let ticketId: string;
 
   beforeAll(async () => {
-    const uploadResponse = await flickr.upload({
+    const uploadResponse = await flickrWithAuth.upload({
       async: true,
       photo: new File(
         [await readFile(resolve("tests/assets/0001.jpg"))],
@@ -25,9 +22,12 @@ describe("single photo", () => {
   it("should success response", async () => {
     let response: Awaited<ReturnType<typeof flickr.photos.upload.checkTickets>>;
     do {
-      response = await flickr.photos.upload.checkTickets({
-        tickets: [ticketId],
-      });
+      response = await flickr.photos.upload.checkTickets(
+        {
+          tickets: [ticketId],
+        },
+        userCredentials,
+      );
 
       expect(response).toStrictEqual({
         stat: "ok",
@@ -51,5 +51,5 @@ describe("single photo", () => {
     photoId = response.uploader.ticket.photoid;
   });
 
-  afterAll(async () => flickr.photos.delete({ photoId }));
+  afterAll(async () => flickrWithAuth.photos.delete({ photoId }));
 });
