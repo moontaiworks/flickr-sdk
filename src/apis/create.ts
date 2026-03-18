@@ -7,6 +7,7 @@ import createPhotosetsAddPhoto from "./rest/photosets/add-photo.js";
 import createPhotosetsCreate from "./rest/photosets/create.js";
 import createPhotosetsDelete from "./rest/photosets/delete.js";
 import createPhotosetsEditMeta from "./rest/photosets/edit-meta.js";
+import createPhotosetsEditPhotos from "./rest/photosets/edit-photos.js";
 import createTestEcho from "./rest/test/echo.js";
 import createTestLogin from "./rest/test/login.js";
 import createTestNull from "./rest/test/null.js";
@@ -30,6 +31,7 @@ export default function createEndpoint(optionsDefault?: GeneralOptions) {
       create: createPhotosetsCreate(optionsDefault),
       delete: createPhotosetsDelete(optionsDefault),
       editMeta: createPhotosetsEditMeta(optionsDefault),
+      editPhotos: createPhotosetsEditPhotos(optionsDefault),
     },
     replace: createReplace(optionsDefault),
     test: {
