@@ -57,8 +57,6 @@ export default function createAccessToken(optionsDefault?: GeneralOptions) {
       },
     }).then((res) => res.text());
 
-    console.log(response);
-
     if (!response.includes("oauth_token")) {
       return Promise.reject(new Error(response));
     }
