@@ -6,6 +6,7 @@ import createPhotosUploadCheckTickets from "./rest/photos/upload/check-tickets.j
 import createPhotosetsAddPhoto from "./rest/photosets/add-photo.js";
 import createPhotosetsCreate from "./rest/photosets/create.js";
 import createPhotosetsDelete from "./rest/photosets/delete.js";
+import createPhotosetsEditMeta from "./rest/photosets/edit-meta.js";
 import createTestEcho from "./rest/test/echo.js";
 import createTestLogin from "./rest/test/login.js";
 import createTestNull from "./rest/test/null.js";
@@ -28,6 +29,7 @@ export default function createEndpoint(optionsDefault?: GeneralOptions) {
       addPhoto: createPhotosetsAddPhoto(optionsDefault),
       create: createPhotosetsCreate(optionsDefault),
       delete: createPhotosetsDelete(optionsDefault),
+      editMeta: createPhotosetsEditMeta(optionsDefault),
     },
     replace: createReplace(optionsDefault),
     test: {
