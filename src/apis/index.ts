@@ -11,6 +11,7 @@ export * from "./rest/photosets/create.js";
 export * from "./rest/photosets/delete.js";
 export * from "./rest/photosets/edit-meta.js";
 export * from "./rest/photosets/edit-photos.js";
+export * from "./rest/photosets/get-context.js";
 export * from "./rest/test/echo.js";
 export * from "./rest/test/login.js";
 export * from "./rest/test/null.js";
