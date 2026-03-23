@@ -35,30 +35,26 @@ export interface PhotosetsEditMetaResponse {
   };
 }
 
-export default function createPhotosetsEditMeta(
-  optionsDefault?: GeneralOptions,
+/**
+ * Modify the meta-data for a photoset.
+ *
+ * @requires `write` permission
+ *
+ * @see https://www.flickr.com/services/api/flickr.photosets.editMeta.html
+ */
+export default async function photosetsEditMeta(
+  payload: PhotosetsEditMetaParams,
+  options?: GeneralOptions,
 ) {
-  /**
-   * Modify the meta-data for a photoset.
-   *
-   * @requires `write` permission
-   *
-   * @see https://www.flickr.com/services/api/flickr.photosets.editMeta.html
-   */
-  return async function (
-    payload: PhotosetsEditMetaParams,
-    options?: GeneralOptions,
-  ) {
-    return ky
-      .post<PhotosetsEditMetaResponse>("rest", {
-        context: { ...optionsDefault, useOAuth: true, ...options },
-        searchParams: {
-          description: payload.description,
-          method: "flickr.photosets.editMeta",
-          photoset_id: payload.photosetId,
-          title: payload.title,
-        },
-      })
-      .then((response) => response.json());
-  };
+  return ky
+    .post<PhotosetsEditMetaResponse>("rest", {
+      context: { useOAuth: true, ...options },
+      searchParams: {
+        description: payload.description,
+        method: "flickr.photosets.editMeta",
+        photoset_id: payload.photosetId,
+        title: payload.title,
+      },
+    })
+    .then((response) => response.json());
 }

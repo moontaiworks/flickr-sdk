@@ -10,26 +10,24 @@ export interface PhotosetsDeleteParams {
 }
 export type PhotosetsDeleteResponse = FlickrOkResponse;
 
-export default function createPhotosetsDelete(optionsDefault?: GeneralOptions) {
-  /**
-   * Delete a photoset.
-   *
-   * @requires `write` permission
-   *
-   * @see https://www.flickr.com/services/api/flickr.photosets.delete.html
-   */
-  return async function (
-    payload: PhotosetsDeleteParams,
-    options?: GeneralOptions,
-  ) {
-    return ky
-      .post<PhotosetsDeleteResponse>("rest", {
-        context: { ...optionsDefault, useOAuth: true, ...options },
-        searchParams: {
-          method: "flickr.photosets.delete",
-          photoset_id: payload.photosetId,
-        },
-      })
-      .then((response) => response.json());
-  };
+/**
+ * Delete a photoset.
+ *
+ * @requires `write` permission
+ *
+ * @see https://www.flickr.com/services/api/flickr.photosets.delete.html
+ */
+export default async function photosetsDelete(
+  payload: PhotosetsDeleteParams,
+  options?: GeneralOptions,
+) {
+  return ky
+    .post<PhotosetsDeleteResponse>("rest", {
+      context: { useOAuth: true, ...options },
+      searchParams: {
+        method: "flickr.photosets.delete",
+        photoset_id: payload.photosetId,
+      },
+    })
+    .then((response) => response.json());
 }

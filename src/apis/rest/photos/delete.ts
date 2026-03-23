@@ -7,26 +7,24 @@ export interface PhotosDeleteParams {
 }
 export type PhotosDeleteResponse = FlickrOkResponse;
 
-export default function createPhotosDelete(optionsDefault?: GeneralOptions) {
-  /**
-   * Delete a photo from flickr.
-   *
-   * @requires permission `delete`
-   *
-   * @see https://www.flickr.com/services/api/flickr.photos.delete.html
-   */
-  return async function (
-    payload: PhotosDeleteParams,
-    options?: GeneralOptions,
-  ) {
-    return ky
-      .post<PhotosDeleteResponse>("rest", {
-        context: { ...optionsDefault, useOAuth: true, ...options },
-        searchParams: {
-          method: "flickr.photos.delete",
-          photo_id: payload.photoId,
-        },
-      })
-      .then((response) => response.json());
-  };
+/**
+ * Delete a photo from flickr.
+ *
+ * @requires permission `delete`
+ *
+ * @see https://www.flickr.com/services/api/flickr.photos.delete.html
+ */
+export default async function photosDelete(
+  payload: PhotosDeleteParams,
+  options?: GeneralOptions,
+) {
+  return ky
+    .post<PhotosDeleteResponse>("rest", {
+      context: { useOAuth: true, ...options },
+      searchParams: {
+        method: "flickr.photos.delete",
+        photo_id: payload.photoId,
+      },
+    })
+    .then((response) => response.json());
 }

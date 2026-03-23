@@ -90,27 +90,23 @@ interface PhotoContextFull {
   url: string;
 }
 
-export default function createPhotosetsGetContext(
-  optionsDefault?: GeneralOptions,
+/**
+ * Returns next and previous photos for a photo in a set.
+ *
+ * @see https://www.flickr.com/services/api/flickr.photosets.getContext.html
+ */
+export default async function photosetsGetContext(
+  payload: PhotosetsGetContextParams,
+  options?: GeneralOptions,
 ) {
-  /**
-   * Returns next and previous photos for a photo in a set.
-   *
-   * @see https://www.flickr.com/services/api/flickr.photosets.getContext.html
-   */
-  return async function (
-    payload: PhotosetsGetContextParams,
-    options?: GeneralOptions,
-  ) {
-    return ky
-      .get<PhotosetsGetContextResponse>("rest", {
-        context: { ...optionsDefault, ...options },
-        searchParams: {
-          method: "flickr.photosets.getContext",
-          photo_id: payload.photoId,
-          photoset_id: payload.photosetId,
-        },
-      })
-      .then((response) => response.json());
-  };
+  return ky
+    .get<PhotosetsGetContextResponse>("rest", {
+      context: { ...options },
+      searchParams: {
+        method: "flickr.photosets.getContext",
+        photo_id: payload.photoId,
+        photoset_id: payload.photosetId,
+      },
+    })
+    .then((response) => response.json());
 }

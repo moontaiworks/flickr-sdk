@@ -9,7 +9,7 @@ let photosetId: string;
 beforeAll(async () => {
   photoIds = await Promise.all(
     ["0001.jpg", "0032.jpg"].map(async (photoName) =>
-      flickrWithAuth
+      flickrWithAuth.upload
         .upload({
           photo: new File(
             [await readFile(resolve(`tests/assets/${photoName}`))],
@@ -20,7 +20,7 @@ beforeAll(async () => {
         .then((r) => r.photoid),
     ),
   );
-  const createResponse = await flickrWithAuth.photosets.create({
+  const createResponse = await flickrWithAuth.rest.photosets.create({
     primaryPhotoId: photoIds[0],
     title: "photosets.editPhotos",
   });
@@ -31,12 +31,12 @@ beforeAll(async () => {
 // automatically deleted.
 afterAll(async () =>
   Promise.all(
-    photoIds.map((photoId) => flickrWithAuth.photos.delete({ photoId })),
+    photoIds.map((photoId) => flickrWithAuth.rest.photos.delete({ photoId })),
   ),
 );
 
 it("should success response", async () => {
-  const response = await flickr.photosets.editPhotos(
+  const response = await flickr.rest.photosets.editPhotos(
     {
       photoIds,
       photosetId,

@@ -29,38 +29,32 @@ export interface AccessTokenResponse {
   username: string;
 }
 
-export default function createAccessToken(optionsDefault?: GeneralOptions) {
-  /**
-   * Exchanging the Request Token for an Access Token.
-   *
-   * After the user authorizes your application, you can exchange the approved
-   * [Request
-   * Token](https://www.flickr.com/services/api/auth.oauth.html#request_token) for
-   * an Access Token. This Access Token should be stored by your application, and
-   * used to make authorized requests to Flickr.
-   *
-   * @see https://www.flickr.com/services/api/auth.oauth.html
-   * @throws a query string formatted error message when failed to request a url.
-   */
-  return async function (
-    { oauth_verifier }: AccessTokenParams,
-    options?: GeneralOptions,
-  ) {
-    const response = await ky("oauth/access_token", {
-      context: {
-        ...optionsDefault,
-        useOAuth: true,
-        ...options,
-      },
-      searchParams: {
-        oauth_verifier: oauth_verifier,
-      },
-    }).then((res) => res.text());
+/**
+ * Exchanging the Request Token for an Access Token.
+ *
+ * After the user authorizes your application, you can exchange the approved
+ * [Request
+ * Token](https://www.flickr.com/services/api/auth.oauth.html#request_token) for
+ * an Access Token. This Access Token should be stored by your application, and
+ * used to make authorized requests to Flickr.
+ *
+ * @see https://www.flickr.com/services/api/auth.oauth.html
+ * @throws a query string formatted error message when failed to request a url.
+ */
+export default async function accessToken(
+  { oauth_verifier }: AccessTokenParams,
+  options?: GeneralOptions,
+) {
+  const response = await ky("oauth/access_token", {
+    context: { useOAuth: true, ...options },
+    searchParams: {
+      oauth_verifier: oauth_verifier,
+    },
+  }).then((res) => res.text());
 
-    if (!response.includes("oauth_token")) {
-      return Promise.reject(new Error(response));
-    }
+  if (!response.includes("oauth_token")) {
+    return Promise.reject(new Error(response));
+  }
 
-    return Object.fromEntries(new URLSearchParams(response).entries());
-  };
+  return Object.fromEntries(new URLSearchParams(response).entries());
 }

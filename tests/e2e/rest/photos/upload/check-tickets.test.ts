@@ -8,7 +8,7 @@ describe("single photo", () => {
   let ticketId: string;
 
   beforeAll(async () => {
-    const uploadResponse = await flickrWithAuth.upload({
+    const uploadResponse = await flickrWithAuth.upload.upload({
       async: true,
       photo: new File(
         [await readFile(resolve("tests/assets/0001.jpg"))],
@@ -20,9 +20,11 @@ describe("single photo", () => {
   });
 
   it("should success response", async () => {
-    let response: Awaited<ReturnType<typeof flickr.photos.upload.checkTickets>>;
+    let response: Awaited<
+      ReturnType<typeof flickr.rest.photos.upload.checkTickets>
+    >;
     do {
-      response = await flickr.photos.upload.checkTickets(
+      response = await flickr.rest.photos.upload.checkTickets(
         {
           tickets: [ticketId],
         },
@@ -51,5 +53,5 @@ describe("single photo", () => {
     photoId = response.uploader.ticket.photoid;
   });
 
-  afterAll(async () => flickrWithAuth.photos.delete({ photoId }));
+  afterAll(async () => flickrWithAuth.rest.photos.delete({ photoId }));
 });

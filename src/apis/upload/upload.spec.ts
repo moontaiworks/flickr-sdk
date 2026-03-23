@@ -7,12 +7,12 @@ import {
   userCredentials,
 } from "#tests/config.js";
 
-import createEndpoint from "./upload.js";
+import upload from "./upload.js";
 
 let photoId: string;
 
 it("should success response", async () => {
-  const response = await createEndpoint()(
+  const response = await upload(
     {
       photo: new File(
         [await readFile(resolve("tests/assets/0001.jpg"))],
@@ -30,4 +30,4 @@ it("should success response", async () => {
   photoId = response.photoid;
 });
 
-afterAll(async () => flickrWithAuth.photos.delete({ photoId }));
+afterAll(async () => flickrWithAuth.rest.photos.delete({ photoId }));

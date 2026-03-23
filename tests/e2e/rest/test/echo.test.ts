@@ -1,7 +1,7 @@
 import { flickr } from "#tests/config.js";
 
 it("should success response", async () => {
-  const response = await flickr.test.echo({ hello: "world" });
+  const response = await flickr.rest.test.echo({ hello: "world" });
 
   expect(response).toStrictEqual({
     api_key: process.env.FLICKR_CONSUMER_KEY!,

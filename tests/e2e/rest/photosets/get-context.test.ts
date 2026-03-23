@@ -9,7 +9,7 @@ let photosetId: string;
 beforeAll(async () => {
   photoIds = await Promise.all(
     ["0001.jpg", "0032.jpg"].map(async (photoName) =>
-      flickrWithAuth
+      flickrWithAuth.upload
         .upload({
           photo: new File(
             [await readFile(resolve(`tests/assets/${photoName}`))],
@@ -20,12 +20,12 @@ beforeAll(async () => {
         .then((r) => r.photoid),
     ),
   );
-  const createResponse = await flickrWithAuth.photosets.create({
+  const createResponse = await flickrWithAuth.rest.photosets.create({
     primaryPhotoId: photoIds[0],
     title: "photosets.getContext",
   });
   photosetId = createResponse.photoset.id;
-  await flickrWithAuth.photosets.addPhoto({
+  await flickrWithAuth.rest.photosets.addPhoto({
     photoId: photoIds[1],
     photosetId,
   });
@@ -35,12 +35,12 @@ beforeAll(async () => {
 // automatically deleted.
 afterAll(async () =>
   Promise.all(
-    photoIds.map((photoId) => flickrWithAuth.photos.delete({ photoId })),
+    photoIds.map((photoId) => flickrWithAuth.rest.photos.delete({ photoId })),
   ),
 );
 
 it("should success response for 1st photo", async () => {
-  const response = await flickr.photosets.getContext({
+  const response = await flickr.rest.photosets.getContext({
     photoId: photoIds[0],
     photosetId,
   });
@@ -65,7 +65,7 @@ it("should success response for 1st photo", async () => {
 });
 
 it("should success response for 2nd photo", async () => {
-  const response = await flickr.photosets.getContext({
+  const response = await flickr.rest.photosets.getContext({
     photoId: photoIds[1],
     photosetId,
   });

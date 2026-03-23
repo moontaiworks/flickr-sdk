@@ -7,12 +7,12 @@ import {
   userCredentials,
 } from "#tests/config.js";
 
-import createReplaceEndpoint from "./replace.js";
+import replace from "./replace.js";
 
 let photoId: string;
 
 beforeAll(async () => {
-  const uploadResponse = await flickrWithAuth.upload({
+  const uploadResponse = await flickrWithAuth.upload.upload({
     photo: new File(
       [await readFile(resolve("tests/assets/0001.jpg"))],
       "0001.jpg",
@@ -22,10 +22,10 @@ beforeAll(async () => {
   photoId = uploadResponse.photoid;
 }, 60000);
 
-afterAll(async () => flickrWithAuth.photos.delete({ photoId }));
+afterAll(async () => flickrWithAuth.rest.photos.delete({ photoId }));
 
 it("should success response", async () => {
-  const response = await createReplaceEndpoint()(
+  const response = await replace(
     {
       photo: new File(
         [await readFile(resolve("tests/assets/0032.jpg"))],

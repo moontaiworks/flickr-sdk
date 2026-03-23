@@ -7,7 +7,7 @@ let photoId: string;
 let photosetId: string;
 
 beforeAll(async () => {
-  const uploadResponse = await flickrWithAuth.upload({
+  const uploadResponse = await flickrWithAuth.upload.upload({
     photo: new File(
       [await readFile(resolve("tests/assets/0001.jpg"))],
       "0001.jpg",
@@ -15,7 +15,7 @@ beforeAll(async () => {
     ),
   });
   photoId = uploadResponse.photoid;
-  const createResponse = await flickrWithAuth.photosets.create({
+  const createResponse = await flickrWithAuth.rest.photosets.create({
     primaryPhotoId: photoId,
     title: "photosets.delete",
   });
@@ -24,10 +24,10 @@ beforeAll(async () => {
 
 // when all photos in the photoset are deleted, the photoset will be
 // automatically deleted.
-afterAll(async () => flickrWithAuth.photos.delete({ photoId }));
+afterAll(async () => flickrWithAuth.rest.photos.delete({ photoId }));
 
 it("should success response", async () => {
-  const response = await flickr.photosets.delete(
+  const response = await flickr.rest.photosets.delete(
     { photosetId },
     userCredentials,
   );

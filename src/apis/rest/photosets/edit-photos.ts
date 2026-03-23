@@ -27,31 +27,27 @@ export interface PhotosetsEditPhotosParams {
 }
 export type PhotosetsEditPhotosResponse = FlickrOkResponse;
 
-export default function createPhotosetsEditPhotos(
-  optionsDefault?: GeneralOptions,
+/**
+ * Modify the photos in a photoset. Use this method to add, remove and
+ * re-order photos.
+ *
+ * @requires `write` permission
+ *
+ * @see https://www.flickr.com/services/api/flickr.photosets.editPhotos.html
+ */
+export default async function photosetsEditPhotos(
+  payload: PhotosetsEditPhotosParams,
+  options?: GeneralOptions,
 ) {
-  /**
-   * Modify the photos in a photoset. Use this method to add, remove and
-   * re-order photos.
-   *
-   * @requires `write` permission
-   *
-   * @see https://www.flickr.com/services/api/flickr.photosets.editPhotos.html
-   */
-  return async function (
-    payload: PhotosetsEditPhotosParams,
-    options?: GeneralOptions,
-  ) {
-    return ky
-      .post<PhotosetsEditPhotosResponse>("rest", {
-        context: { ...optionsDefault, useOAuth: true, ...options },
-        searchParams: {
-          method: "flickr.photosets.editPhotos",
-          photo_ids: payload.photoIds.join(","),
-          photoset_id: payload.photosetId,
-          primary_photo_id: payload.primaryPhotoId,
-        },
-      })
-      .then((response) => response.json());
-  };
+  return ky
+    .post<PhotosetsEditPhotosResponse>("rest", {
+      context: { useOAuth: true, ...options },
+      searchParams: {
+        method: "flickr.photosets.editPhotos",
+        photo_ids: payload.photoIds.join(","),
+        photoset_id: payload.photosetId,
+        primary_photo_id: payload.primaryPhotoId,
+      },
+    })
+    .then((response) => response.json());
 }

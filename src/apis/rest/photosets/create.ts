@@ -31,28 +31,26 @@ export interface PhotosetsCreateResponse {
   };
 }
 
-export default function createPhotosetsCreate(optionsDefault?: GeneralOptions) {
-  /**
-   * Create a new photoset for the calling user.
-   *
-   * @requires `write` permission
-   *
-   * @see https://www.flickr.com/services/api/flickr.photosets.create.html
-   */
-  return async function (
-    payload: PhotosetsCreateParams,
-    options?: GeneralOptions,
-  ) {
-    return ky
-      .post<PhotosetsCreateResponse>("rest", {
-        context: { ...optionsDefault, useOAuth: true, ...options },
-        searchParams: {
-          description: payload.description,
-          method: "flickr.photosets.create",
-          primary_photo_id: payload.primaryPhotoId,
-          title: payload.title,
-        },
-      })
-      .then((response) => response.json());
-  };
+/**
+ * Create a new photoset for the calling user.
+ *
+ * @requires `write` permission
+ *
+ * @see https://www.flickr.com/services/api/flickr.photosets.create.html
+ */
+export default async function photosetsCreate(
+  payload: PhotosetsCreateParams,
+  options?: GeneralOptions,
+) {
+  return ky
+    .post<PhotosetsCreateResponse>("rest", {
+      context: { useOAuth: true, ...options },
+      searchParams: {
+        description: payload.description,
+        method: "flickr.photosets.create",
+        primary_photo_id: payload.primaryPhotoId,
+        title: payload.title,
+      },
+    })
+    .then((response) => response.json());
 }

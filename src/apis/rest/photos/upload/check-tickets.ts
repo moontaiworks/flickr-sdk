@@ -29,26 +29,22 @@ interface PhotosUploadCheckTicketsResponseProcessing {
   };
 }
 
-export default function createPhotosUploadCheckTickets(
-  optionsDefault?: GeneralOptions,
+/**
+ * Checks the status of one or more asynchronous photo upload tickets.
+ *
+ * @see https://www.flickr.com/services/api/flickr.photos.upload.checkTickets.html
+ */
+export default async function photosUploadCheckTickets(
+  payload: PhotosUploadCheckTicketsParams,
+  context?: GeneralOptions,
 ) {
-  /**
-   * Checks the status of one or more asynchronous photo upload tickets.
-   *
-   * @see https://www.flickr.com/services/api/flickr.photos.upload.checkTickets.html
-   */
-  return async function (
-    payload: PhotosUploadCheckTicketsParams,
-    options?: GeneralOptions,
-  ) {
-    return ky
-      .post<PhotosUploadCheckTicketsResponse>("rest", {
-        context: { ...optionsDefault, ...options },
-        searchParams: {
-          method: "flickr.photos.upload.checkTickets",
-          tickets: payload.tickets.join(","),
-        },
-      })
-      .then((response) => response.json());
-  };
+  return ky
+    .post<PhotosUploadCheckTicketsResponse>("rest", {
+      context: { useOAuth: true, ...context },
+      searchParams: {
+        method: "flickr.photos.upload.checkTickets",
+        tickets: payload.tickets.join(","),
+      },
+    })
+    .then((response) => response.json());
 }
