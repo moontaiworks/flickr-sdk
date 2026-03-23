@@ -12,7 +12,10 @@ export type TestLoginResponse = FlickrOkResponse;
  *
  * @see https://www.flickr.com/services/api/flickr.test.login.html
  */
-export default async function testLogin(options?: GeneralOptions) {
+export default async function testLogin(
+  _?: TestLoginParams,
+  options?: GeneralOptions,
+) {
   return ky
     .post<TestLoginResponse>("rest", {
       context: { useOAuth: true, ...options },

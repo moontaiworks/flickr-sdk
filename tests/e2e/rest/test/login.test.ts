@@ -1,7 +1,7 @@
 import { flickr, userCredentials } from "#tests/config.js";
 
 it("should success response", async () => {
-  const response = await flickr.rest.test.login(userCredentials);
+  const response = await flickr.rest.test.login(undefined, userCredentials);
 
   expect(response).toStrictEqual({
     stat: "ok",

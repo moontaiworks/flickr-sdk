@@ -12,7 +12,10 @@ export type TestNullResponse = FlickrOkResponse;
  *
  * @see https://www.flickr.com/services/api/flickr.test.null.html
  */
-export default async function testNull(options?: GeneralOptions) {
+export default async function testNull(
+  _?: TestNullParams,
+  options?: GeneralOptions,
+) {
   return ky
     .post<TestNullResponse>("rest", {
       context: { useOAuth: true, ...options },
